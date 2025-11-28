@@ -32,6 +32,10 @@ def run_quiz_solver_in_background(email: str, secret: str, url: str, start_time:
         print(f"CRITICAL ERROR in Quiz Solver for URL {url}: {e}")
         # Optional: You could implement a system to notify you of the failure
 
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "message": "Server is running 🚀"}
+
 @app.post("/quiz-task", status_code=200)
 async def handle_quiz_request(request: Request, background_tasks: BackgroundTasks):
     """Receives the quiz request, validates the secret, and starts the solver."""
@@ -71,22 +75,3 @@ async def handle_quiz_request(request: Request, background_tasks: BackgroundTask
     )
 
     return {"message": "Quiz processing started successfully in the background."}
-        #     if response.status_code == 200:
-        #         print(f"Answer submitted successfully for URL: {current_url}")
-        #         # Assuming the response contains the next quiz URL or None
-        #         resp_json = response.json()
-        #         current_url = resp_json.get("next_quiz_url")
-        #     else:
-        #         print(f"Failed to submit answer. Status Code: {response.status_code}, Response: {response.text}")
-        #         break  # Exit on submission failure
-
-        # except Exception as e:
-        #     print(f"Error while solving quiz at {current_url}: {e}")
-        #     break  # Exit on any error
-        
-        
-        
-# --- Run Command ---
-# To run this file: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 1 
-# Note: --workers 1 is important for Playwright, but consider a task queue (Celery) 
-# for true production/parallelism.
