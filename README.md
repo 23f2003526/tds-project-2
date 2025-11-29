@@ -17,20 +17,21 @@ The service is designed to solve multi-step quizzes recursively until completion
 
 ## 📋 Table of Contents
 
-- [Overview](#overview)
-- [Features](#features)
-- [Architecture](#architecture)
-- [How It Works](#how-it-works)
-- [Key Design Decisions](#key-design-decisions)
-- [Installation &amp; Setup](#installation--setup)
-- [Environment Variables](#environment-variables)
-- [Running the Server](#running-the-server)
-- [API Endpoints](#api-endpoints)
-- [Tools Available to the Agent](#tools-available-to-the-agent)
-- [Timeouts &amp; Limits](#timeouts--limits)
-- [Logging &amp; Debugging](#logging--debugging)
-- [License](#license)
-- [Credits](#credits)
+- [🔍 Overview](#-overview)  
+- [📌 Features](#-features)  
+- [🏗️ Architecture](#-architecture)  
+- [🧠 How It Works](#-how-it-works)  
+- [📝 Key Design Decisions](#-key-design-decisions)  
+- [⚙️ Installation & Setup](#-installation--setup)  
+- [🔐 Environment Variables](#-environment-variables)  
+- [▶️ Running the Server](#-running-the-server)  
+- [📡 API Endpoints](#-api-endpoints)  
+- [🛠 Tools Available to the Agent](#-tools-available-to-the-agent)  
+- [⏱ Timeouts & Limits](#-timeouts--limits)  
+- [🧪 Logging & Debugging](#-logging--debugging)  
+- [📄 License](#-license)  
+- [🙌 Credits](#-credits)  
+
 
 ## 🔍 Overview
 
