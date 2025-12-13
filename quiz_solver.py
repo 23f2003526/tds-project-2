@@ -204,7 +204,7 @@ def solve_quiz_task(email: str, secret: str, url: str, start_time: float):
                     "2. ANALYZE: If there is an audio file, use `transcribe_audio` to get the instructions.\n"
                     "3. DATA: If you need to analyze a CSV with conditions (e.g., 'sum numbers > 500'), use `analyze_csv_data`. You can write Pandas code like: \"df[df['value'] > 500]['value'].sum()\".\n"
                     "4.SUBMIT: You MUST use the `send_post_request` tool for final submission.\n"
-                    "5. The `send_post_request` tool takes two parameters: `url` and `json_payload`.\n"
+                    "5. The `send_post_request` tool takes two parameters: `url` and `json_payload`.The url parameter will be https://tds-llm-analysis.s-anand.net/submit in most cases unless specified otherwise\n"
                     "6. The `json_payload` parameter MUST be a single Python dictionary containing the keys: 'email', 'secret', 'url', and 'answer'. The url is the current page URL in most cases. Always make sure that the url is not a relative path but full absolute path.\n"
                     "7. Construct the full dictionary first, then pass it as the single `json_payload` argument to the tool call.\n"
                     "8. **CRITICAL:**Your FINAL ANSWER MUST ONLY CONTAIN THE RAW OUTPUT from the `send_post_request` tool.\n"
@@ -212,8 +212,9 @@ def solve_quiz_task(email: str, secret: str, url: str, start_time: float):
                     "10. **URL RESOLUTION:** If a link is relative (e.g., 'file.opus') and the current URL does NOT end in a slash (e.g., '.../page'), standard URL resolution replaces the last segment. \n"
                     "   - CORRECT: '.../page' + 'file.opus' -> '.../file.opus'\n"
                     "   - WRONG: '.../page' + 'file.opus' -> '.../page/file.opus'\n"
-                    "   Always check the generated URL before calling tools."
-                    "11. When using run_code, you MUST use the print() function to output any value you need to see, as the tool only returns the contents of stdout"
+                    "   Always check the generated URL before calling tools.\n"
+                    "11. When using run_code, you MUST use the print() function to output any value you need to see, as the tool only returns the contents of stdout\n"
+                    "12. If you extract an archive with extract_archive, ALWAYS inspect the returned text for the actual filenames (e.g., logs.jsonl) and use those exact paths with analyze_tabular_file or analyze_csv_data instead of guessing. If you see .jsonl or .ndjson, use analyze_tabular_file on that path; the tool supports JSON Lines files.\n\n"
 
                     f"PAGE CONTENT:\n{page_content}"
                 )

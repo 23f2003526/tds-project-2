@@ -393,14 +393,10 @@ def extract_pdf_text(file_path: str, pages: str = "all", max_chars: int = 30000)
 @tool
 def analyze_tabular_file(file_path: str, query_expression: str) -> str:
     """
-    Load a tabular file (CSV, TSV, XLSX, JSON, Parquet) into a pandas DataFrame 'df'
+    Load a tabular file (CSV, TSV, XLSX, JSON, Parquet, JSONL) into a pandas DataFrame 'df'
     and execute Python code against it.
 
     The final answer MUST be assigned to a variable named 'result' in query_expression.
-
-    Examples:
-        - "result = df['value'].sum()"
-        - "df['ratio'] = df['a'] / df['b']; result = df['ratio'].mean()"
     """
     try:
         ext = os.path.splitext(file_path)[1].lower()
@@ -412,6 +408,9 @@ def analyze_tabular_file(file_path: str, query_expression: str) -> str:
             df = pd.read_excel(file_path)
         elif ext in [".json"]:
             df = pd.read_json(file_path)
+        elif ext in [".jsonl", ".ndjson"]:
+            # JSON Lines: one JSON object per line
+            df = pd.read_json(file_path, lines=True)
         elif ext in [".parquet"]:
             df = pd.read_parquet(file_path)
         else:
@@ -542,7 +541,7 @@ def extract_archive(archive_path: str, extract_to: str = "LLMFiles/extracted") -
     """
     Extract a .zip or .tar(.gz) archive to a directory.
 
-    Returns the extraction directory path.
+    Returns the extraction directory path AND a list of extracted files.
     """
     try:
         os.makedirs(extract_to, exist_ok=True)
@@ -555,9 +554,35 @@ def extract_archive(archive_path: str, extract_to: str = "LLMFiles/extracted") -
         else:
             return f"Unsupported archive format for {archive_path}"
 
-        return f"Archive extracted to: {extract_to}"
+        # NEW: list all files so the agent can see them
+        file_list = []
+        for root, dirs, files in os.walk(extract_to):
+            for name in files:
+                rel_path = os.path.join(root, name)
+                file_list.append(rel_path)
+
+        files_str = "\n".join(sorted(file_list))
+        return f"Archive extracted to: {extract_to}\nFiles:\n{files_str}"
     except Exception as e:
         return f"Error extracting archive {archive_path}: {e}"
+    
+@tool
+def list_files(directory: str) -> str:
+    """
+    List all files under a directory (recursively).
+    """
+    if not os.path.exists(directory):
+        return f"Directory does not exist: {directory}"
+
+    paths = []
+    for root, dirs, files in os.walk(directory):
+        for name in files:
+            paths.append(os.path.join(root, name))
+
+    if not paths:
+        return f"No files found under {directory}"
+    
+    return "Files:\n" + "\n".join(sorted(paths))
 
 @tool
 def encode_image_to_base64(image_path: str) -> str:
@@ -599,7 +624,8 @@ def get_langchain_agent() -> Any:
         plot_with_matplotlib,
         ocr_image,
         extract_archive,
-        encode_image_to_base64
+        encode_image_to_base64,
+        list_files
         ] 
 
     prompt = hub.pull("hwchase17/openai-tools-agent")
